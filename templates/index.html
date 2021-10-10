@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'styles.css'%}">
+</head>
+<body>
+{% include 'toast/message.html' %}
+  <h2>Election Result System</h2>
+  <p>Click to view the Result of your Choice:</p>
+
+  <div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'pu')" id="defaultOpen">PU Results</button>
+    <button class="tablinks" onclick="openCity(event, 'lgaresult')">Results by LGA</button>
+    <button class="tablinks" onclick="openCity(event, 'result')">Add Election Result</button>
+  </div>
+
+  <div id="pu" class="tabcontent">
+    <h3>Polling Unit Results</h3>
+    <div class="container">
+      <form action="{% url 'pu_result' %}" method="post">
+	  	{% csrf_token %}
+	  	<div class="row">
+          <div class="col-25">
+            <label for="country">State</label>
+          </div>
+          <div class="col-75">
+            <select id="state" name="state">
+              <option value="australia">Select State</option>
+			  {% for data in show %}
+              	<option value="{{data.id}}">{{data.state_name}}</option>
+				{% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="country">LGA</label>
+          </div>
+          <div class="col-75">
+            <select id="lga" name="lga">
+              <option>Select Local Govt.</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="country">Polling Unit</label>
+          </div>
+          <div class="col-75">
+            <select id="pollingunit" name="pollingunit">
+              <option>Select Polling Unit.</option>
+            </select>
+          </div>
+        </div><br>
+        <div class="row">
+          <input type="submit" value="Check Result">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="lgaresult" class="tabcontent">
+    <h3>Results By LGA's</h3>
+	<div class="container">
+    <form action="{% url 'resultsbylga' %}" method="post">
+		{% csrf_token %}
+		<div class="row">
+          <div class="col-25">
+            <label for="country">State</label>
+          </div>
+          <div class="col-75">
+            <select id="states" name="states">
+              <option>Select State</option>
+			  {% for data in show %}
+              	<option value="{{data.id}}">{{data.state_name}}</option>
+				{% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="country">LGA</label>
+          </div>
+          <div class="col-75">
+            <select id="lgas" name="lgas">
+              <option>Select Local Govt.</option>
+            </select>
+          </div>
+        </div><br>
+		<div class="row">
+          <input type="submit" value="Check Result">
+        </div>
+	</form>
+	</div>
+  </div>
+
+  <div id="result" class="tabcontent">
+    <h3>Add Election Result</h3>
+    <div class="container">
+      <form action="{% url 'addresult' %}" method="post">
+	  	{% csrf_token %}
+	  	<div class="row">
+          <div class="col-25">
+            <label for="country">State</label>
+          </div>
+          <div class="col-75">
+            <select id="statere" name="statere">
+              <option>Select State</option>
+			  {% for data in show %}
+              	<option value="{{data.id}}">{{data.state_name}}</option>
+				{% endfor %}
+            </select>
+          </div>
+        </div>
+		<div class="row">
+          <div class="col-25">
+            <label for="country">Agent Name</label>
+          </div>
+          <div class="col-75">
+            <select name="agentname">
+              <option>Select Agent Name</option>
+			  {% for data in agentname %}
+              	<option value="{{data.firstname}}">{{data.firstname}}</option>
+				{% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="lga">LGA</label>
+          </div>
+          <div class="col-75">
+            <select id="lgasr" name="lgasr">
+              <option>Select Local Govt.</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="country">Polling Unit</label>
+          </div>
+          <div class="col-75">
+            <select id="pollingunitres" name="pollingunitres">
+              <option>Select Polling Unit.</option>
+            </select>
+          </div>
+        </div>
+		<div class="row">
+          <div class="col-25">
+            <label for="country">Party</label>
+          </div>
+          <div class="col-75">
+            <select name="party">
+              <option>Select Party</option>
+			  {% for data in party %}
+              	<option value="{{data.partyid}}">{{data.partyname}}</option>
+				{% endfor %}
+            </select>
+          </div>
+        </div>
+		<div class="row">
+          <div class="col-25">
+            <label for="">Result</label>
+          </div>
+          <div class="col-75">
+            <input type="text" name="score" placeholder="Enter Election Result"/>
+          </div>
+        </div>
+		<br>
+        <div class="row">
+          <input type="submit" value="Add Result">
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function openCity(evt, cityName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+<script src="{% static 'jquery-2.2.4.min.js'%}"></script>
+<script type="text/javascript">
+         $(document).ready(function(){
+          $("#state").change(function(){
+           var state = $(this).val();
+           $.ajax({
+            url: '{% url 'index' %}',
+            type: 'POST',
+            data: {
+             state_id:state,
+             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           success:function(response){
+             console.log(response)
+             var len = response.length;
+             $("#lga").empty();
+             for( var i = 0; i<len; i++){
+              var name = response[i]['fields']['lga_name'];
+              var lga_id = response[i]['fields']['lga_id'];
+              $("#lga").append("<option value='"+lga_id+"'>"+name+"</option>");
+            }
+          }
+        });
+         });
+        });
+      </script>
+
+	  <script type="text/javascript">
+         $(document).ready(function(){
+          $("#states").change(function(){
+           var state = $(this).val();
+           $.ajax({
+            url: '{% url 'index' %}',
+            type: 'POST',
+            data: {
+             state_id:state,
+             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           success:function(response){
+             console.log(response)
+             var len = response.length;
+             $("#lgas").empty();
+             for( var i = 0; i<len; i++){
+              var name = response[i]['fields']['lga_name'];
+              var lga_id = response[i]['fields']['lga_id'];
+              $("#lgas").append("<option value='"+lga_id+"'>"+name+"</option>");
+            }
+          }
+        });
+         });
+        });
+      </script>
+
+	  <script type="text/javascript">
+         $(document).ready(function(){
+          $("#statere").change(function(){
+           var state = $(this).val();
+           $.ajax({
+            url: '{% url 'index' %}',
+            type: 'POST',
+            data: {
+             state_id:state,
+             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           success:function(response){
+             console.log(response)
+             var len = response.length;
+             $("#lgasr").empty();
+             for( var i = 0; i<len; i++){
+              var name = response[i]['fields']['lga_name'];
+              var lga_id = response[i]['fields']['lga_id'];
+              $("#lgasr").append("<option value='"+lga_id+"'>"+name+"</option>");
+            }
+          }
+        });
+         });
+        });
+      </script>
+
+	  <script type="text/javascript">
+         $(document).ready(function(){
+          $("#lgasr").change(function(){
+           var lgasr = $(this).val();
+           $.ajax({
+            url: '{% url 'getpollingunit' %}',
+            type: 'POST',
+            data: {
+             lga_id:lgasr,
+             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           success:function(response){
+             console.log(response)
+             var len = response.length;
+             $("#pollingunitres").empty();
+             for( var i = 0; i<len; i++){
+              var name = response[i]['fields']['polling_unit_name'];
+              var polling_unit_id = response[i]['fields']['polling_unit_id'];
+              $("#pollingunitres").append("<option value='"+polling_unit_id+"'>"+name+"</option>");
+            }
+          }
+        });
+         });
+        });
+      </script>
+
+	  <script type="text/javascript">
+         $(document).ready(function(){
+          $("#lga").change(function(){
+           var lga = $(this).val();
+           $.ajax({
+            url: '{% url 'getpollingunit' %}',
+            type: 'POST',
+            data: {
+             lga_id:lga,
+             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+           },
+           dataType: 'json',
+           success:function(response){
+             console.log(response)
+             var len = response.length;
+             $("#pollingunit").empty();
+             for( var i = 0; i<len; i++){
+              var name = response[i]['fields']['polling_unit_name'];
+              var polling_unit_id = response[i]['fields']['polling_unit_id'];
+              $("#pollingunit").append("<option value='"+polling_unit_id+"'>"+name+"</option>");
+            }
+          }
+        });
+         });
+        });
+      </script>
+
+</body>
+</html> 

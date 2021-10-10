@@ -1,0 +1,43 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 30%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+</head>
+<body>
+
+  <h2>{{lga.lga_name|upper}}</h2>
+
+  <table>
+    <tr>
+      <th>Polling Unit</th>
+      <th>Total Vote</th>
+    </tr>
+    {% for result in party_scores %}
+        <tr>
+            <td>{{result.pollingUnitName}}</td>
+            <td>{{result.total_vote|intcomma}}</td>
+        </tr>
+    {% endfor %}
+  </table>
+  <span><h2><b>Vote Result: {{sum_total|intcomma}}</b></h2></span>
+
+</body>
+</html>
+
